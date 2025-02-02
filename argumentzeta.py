@@ -9,8 +9,8 @@ Created on Tue Jun 11 04:03:23 2024
 import mpmath as mpm
 import numpy as np
 
-from mpmath import *
-from numpy import inf
+from mpmath import * 
+from mpmath import mpf, nstr, atan, e, fprod, fsum, power, factorial, fmul, fdiv, exp, sqrt, pi, log, findroot, zeta, euler, sin, acos, cos 
 #from scipy.optimize import differential_evolution, NonlinearConstraint
 from scipy.integrate import quad
 from scipy.special import polygamma, factorial
@@ -31,9 +31,9 @@ def latex_float(num, we):
     
     
     
-eta=0.000158 
-c=1.000225
-r=1.000605
+eta=0.000158#0.04007#0.04007#0.000158 
+c=1.000225#1.0434#1.04023#1.000225
+r=1.000605#1.25042#1.25042#1.000605
 n=5
 
 T=exp(106)
@@ -230,7 +230,7 @@ int1r2 = lambda w: sigma(w)-1
 int12r = quad(int1r2, theta(1+eta), theta(1))[0]  
 
 def r1D3(T):
-    return fdiv(int11r*log(c1(T)), eta)+fdiv(int12r*log(zeta(1+eta)),eta)
+    return fdiv(int11r*log(c1(T)*power(1.00212,c2(T))), eta)+fdiv(int12r*log(zeta(1+eta)),eta)
 
 
 int3r1 = lambda w: 1-sigma(w)
@@ -241,7 +241,7 @@ int32r = quad(int3r2, theta(1), theta(sigmah[n]))[0]
  
 def r2D3(T):
 
-    return fdiv(log(1.546)*int31r,1-sigmah[n])+fdiv(log(c1(T))*int32r,1-sigmah[n])
+    return fdiv(log(1.546*1.00212)*int31r,1-sigmah[n])+fdiv(log(c1(T)*power(1.00212,c2(T)))*int32r,1-sigmah[n])
 
 
 int5r1 = lambda w: sigmah[0]-sigma(w)
@@ -251,7 +251,7 @@ int5r2 = lambda w: sigma(w)-0.5
 int52r = quad(int5r2, theta(sigmah[0]), theta(0.5))[0]
 
 def r3D3(T):
-    return log(1.546)*(theta(sigmah[0])-theta(sigmah[n]))+fdiv(log(k1(T))*int51r,sigmah[0]-0.5)+fdiv(log(1.546)*int52r,sigmah[0]-0.5)
+    return log(1.546*1.00212)*(theta(sigmah[0])-theta(sigmah[n]))+fdiv(log(k1(T)*power(1.00212,k3(T)))*int51r,sigmah[0]-0.5)+fdiv(log(1.546*1.00212)*int52r,sigmah[0]-0.5)
 
 
 int6r1 = lambda w: 1-2*sigma(w)
@@ -261,10 +261,10 @@ int6r2 = lambda w: sigma(w)
 int62r = quad(int6r2, theta(0.5), theta(0))[0]
 
 def r4D3(T):
-    return log(fdiv(c1(T), power(2*pi,0.5)))*int61r+int62r*2*log(k1(T))
+    return log(fdiv(c1(T)*power(1.00212,c2(T)), power(2*pi,0.5)))*int61r+int62r*2*log(k1(T)*power(1.00212,k3(T)))
 
 
-int7r1 = lambda w: -fdiv(sigma(w),eta)*log(fdiv(1+eta,c1(T)*power(2*pi,eta)))+log(fdiv(c1(T), power(2*pi,0.5)))
+int7r1 = lambda w: -fdiv(sigma(w),eta)*log(fdiv(1+eta,c1(T)*power(2*pi,eta)))+log(fdiv(c1(T)*power(1.00212,c2(T)), power(2*pi,0.5)))
 int71r = quad(int7r1, theta(0), theta(-eta))[0]
 
 int7r2 = lambda w: 1-2*sigma(w)
@@ -433,7 +433,7 @@ print('mathcalC3prime: ', mathcalC3p(T))
 #DEF mathcalD3
 
 def mathcalD3(T):
-    return 2*C3T(T)+fdiv(1,4*pi)+fdiv(log(3)-log(2*pi*e),pi)
+    return 2*C3T(T)+fdiv(log(3)-log(2*pi*e),pi)
 
 print('mathcalD3: ', mathcalD3(T))
 
@@ -441,11 +441,24 @@ print('mathcalD3: ', mathcalD3(T))
 #DEF mathcalD3prime
 
 def mathcalD3p(T):
-    return 2*C3Tprime(T)+fdiv(1,4*pi)+fdiv(log(3)-log(2*pi*e),pi)
+    return 2*C3Tprime(T)+fdiv(log(3)-log(2*pi*e),pi)
 
 print('mathcalD3prime: ', mathcalD3p(T))
 
+#DEF mathcalE
 
+def mathcalE(T):
+    return 2*C3T(T)+fdiv(1,pi)+fdiv(log(fdiv(3,4)),2*pi)-fdiv(log(2*pi*e),pi)
+
+print('mathcalE: ', mathcalE(T))
+
+
+#DEF mathcalEprime
+
+def mathcalEprime(T):
+    return 2*C3Tprime(T)+fdiv(1,pi)+fdiv(log(fdiv(3,4)),2*pi)-fdiv(log(2*pi*e),pi)
+
+print('mathcalE: ', mathcalEprime(T))
 
 #Check conditions
 
